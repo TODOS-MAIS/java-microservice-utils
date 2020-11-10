@@ -1,10 +1,7 @@
 package br.com.arca.commons.audit;
 
 import br.com.arca.commons.exception.DefaultException;
-import br.com.arca.commons.util.AuthenticationUtil;
-import br.com.arca.commons.util.JsonUtils;
-import br.com.arca.commons.util.JwtUtil;
-import br.com.arca.commons.util.RequestUtil;
+import br.com.arca.commons.util.*;
 import br.com.arca.commons.util.log.CommonLogs;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -12,9 +9,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.ValidationUtils;
 
+import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
-import java.util.Objects;
+import javax.validation.Validator;
 import java.util.function.Supplier;
 
 import static br.com.arca.commons.util.StringUtils.*;
@@ -28,6 +27,7 @@ public class AuditService {
     private final AuthenticationUtil authUtil;
     private final JwtUtil jwtUtil;
     private final RequestUtil requestUtil;
+    private final ArcaValidator validator;
 
     public <T extends Exception> Supplier<T> defaultAuditExceptionSuplier(Auditable auditable, T ex, AuditType type) {
         return () -> {
@@ -65,7 +65,9 @@ public class AuditService {
         save(auditoria.build());
     }
 
-    public void defaultAudit(@Valid AuditPayload audit) {
+    public void defaultAudit(AuditPayload audit) {
+        validator.validate(audit, "There was a problem in validating AuditPayload");
+
         var auditable = (Auditable) ObjectUtils.defaultIfNull(audit.getAuditable(), audit.getNewPayload());
 
         var builder = generateDefaultAuditoriaBuilder(auditable, audit.getOriginalPayload(),
