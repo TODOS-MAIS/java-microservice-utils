@@ -9,7 +9,9 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum AuditType {
-	CRIACAO("Operação de criação no sistema"), ATUALIZACAO("Operação de atualização no sistema");
+	CRIACAO("Operação de criação no sistema"),
+	ATUALIZACAO("Operação de atualização no sistema"),
+	CONSULTA("Operação de consulta no sistema");
 
 	private String descricao;
 }
