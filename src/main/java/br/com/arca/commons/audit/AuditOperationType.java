@@ -14,6 +14,8 @@ public enum AuditOperationType {
     RECUPERACAO_QUESTIONARIO_POR_APELIDO(AuditOperation.QUESTIONARIO, "Recuperação de um questionário pelo apelido"),
     RECUPERACAO_QUESTIONARIO_USUARIO(AuditOperation.QUESTIONARIO, "Recuperação do questionário de um usuário"),
     RECUPERACAO_QUESTIONARIOS_DISPONIVEIS(AuditOperation.QUESTIONARIO, "Recuperação de questionários disponíveis para um usuário"),
+    ANJO_ENTREGA(AuditOperation.ANJO, ""),
+    COMPARACAO_BIOMETRIA(AuditOperation.COMPARACAO_BIOMETRIA, "")
     ;
 
     private AuditOperation operation;
