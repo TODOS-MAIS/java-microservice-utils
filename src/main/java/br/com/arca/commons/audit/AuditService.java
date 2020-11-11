@@ -9,11 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.ValidationUtils;
 
-import javax.validation.ConstraintViolationException;
-import javax.validation.Valid;
-import javax.validation.Validator;
 import java.util.function.Supplier;
 
 import static br.com.arca.commons.util.StringUtils.*;
@@ -51,6 +47,28 @@ public class AuditService {
         defaultAudit(auditable, auditable, ex, type, detalhe);
     }
 
+    public DefaultException auditException(Object payload, AuditType type, AuditOperationType operationType,
+                                           AuditModule module, String afetado, DefaultException ex) {
+        var auditPayload = AuditPayload.builder()
+                .auditable(getAuditable(afetado, null, operationType.getOperation()))
+                .originalPayload(payload)
+                .newPayload(ex)
+                .type(type)
+                .operationType(operationType)
+                .status(ex.getHttpStatus())
+                .logLevel(AuditLogLevel.ERROR)
+                .module(module);
+
+        defaultAudit(auditPayload.build());
+
+        return ex;
+    }
+
+    public Supplier<DefaultException> auditExceptionSupplier(Object payload, AuditType type, AuditOperationType operationType,
+                                                             AuditModule module, String afetado, DefaultException ex) {
+        return () -> auditException(payload, type, operationType, module, afetado, ex);
+    }
+
     public void defaultAudit(Auditable originalPayload, Auditable newPayload, AuditType type) {
         defaultAudit(newPayload, originalPayload, newPayload, type, null);
     }
@@ -65,18 +83,24 @@ public class AuditService {
         save(auditoria.build());
     }
 
-    public void defaultAudit(AuditPayload audit) {
-        validator.validate(audit, "There was a problem in validating AuditPayload");
+    public void defaultAudit(AuditPayload auditPayload) {
+        validator.validate(auditPayload, "There was a problem in validating AuditPayload");
 
-        var auditable = (Auditable) ObjectUtils.defaultIfNull(audit.getAuditable(), audit.getNewPayload());
+        var auditable = (Auditable) ObjectUtils.defaultIfNull(auditPayload.getAuditable(), auditPayload.getNewPayload());
 
-        var builder = generateDefaultAuditoriaBuilder(auditable, audit.getOriginalPayload(),
-                audit.getNewPayload(), audit.getType(), audit.getDetail());
+        var builder = generateDefaultAuditoriaBuilder(auditable, auditPayload.getOriginalPayload(),
+                auditPayload.getNewPayload(), auditPayload.getType(), auditPayload.getDetail());
 
-        builder.tipoOperacao(audit.getOperationType());
-        builder.codigoRetorno(String.valueOf(audit.getStatus().value()));
-        builder.nivelSeveridade(audit.getLogLevel());
-        builder.modulo(audit.getModule());
+        if(!auditable.getDefaultOperation().equals(auditPayload.getOperationType().getOperation())) {
+            builder.operacaoDe(auditPayload.getOperationType().getOperation());
+        }
+
+        builder.detalhe(StringUtils.isBlank(auditPayload.getDetail())
+                    ? auditPayload.getOperationType().getDetail() : auditPayload.getDetail())
+                .tipoOperacao(auditPayload.getOperationType())
+                .codigoRetorno(String.valueOf(auditPayload.getStatus().value()))
+                .nivelSeveridade(auditPayload.getLogLevel())
+                .modulo(auditPayload.getModule());
 
         save(builder.build());
     }
@@ -132,11 +156,32 @@ public class AuditService {
         repository.save(auditoria);
     }
 
+    public Auditable getAuditable(String afetado, String responsavel, AuditOperation operation) {
+        return new Auditable() {
+            @Override
+            public String getAfetado() {
+                return afetado;
+            }
+
+            @Override
+            public String getResponsavel() {
+                return responsavel;
+            }
+
+            @Override
+            public AuditOperation getDefaultOperation() {
+                return operation;
+            }
+        };
+    }
+
     private String getStringPayload(Object payload) {
         if (payload instanceof DefaultException) {
             return JsonUtils.stringify(((DefaultException) payload).getErrorResponse());
         } else if (payload instanceof Exception) {
             return JsonUtils.stringify(ExceptionUtils.getStackTrace((Exception) payload));
+        } else if(payload instanceof String) {
+            return (String) payload;
         } else {
             return JsonUtils.stringify(payload);
         }
