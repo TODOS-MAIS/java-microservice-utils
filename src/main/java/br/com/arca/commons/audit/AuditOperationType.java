@@ -14,12 +14,12 @@ public enum AuditOperationType {
     RECUPERACAO_QUESTIONARIO_POR_APELIDO(AuditOperation.QUESTIONARIO, "Recuperação de um questionário pelo apelido"),
     RECUPERACAO_QUESTIONARIO_USUARIO(AuditOperation.QUESTIONARIO, "Recuperação do questionário de um usuário"),
     RECUPERACAO_QUESTIONARIOS_DISPONIVEIS(AuditOperation.QUESTIONARIO, "Recuperação de questionários disponíveis para um usuário"),
-    ANJO_ENTREGA(AuditOperation.ANJO, ""),
-    COMPARACAO_BIOMETRIA(AuditOperation.COMPARACAO_BIOMETRIA, ""),
+    ANJO_ENTREGA(AuditOperation.ANJO, "Criação ou atualização da entrega realizada pelo anjo"),
+    COMPARACAO_BIOMETRIA(AuditOperation.COMPARACAO_BIOMETRIA, "Comparação da foto pela Acesso Digital"),
+    AUTENTICACAO(AuditOperation.AUTENTICACAO, "Login do usuário no sistema"),
     CADASTRO_MENSAGEM(AuditOperation.MENSAGEM, "Cadastro de mensagem"),
     MARCAR_MENSAGEM_COMO_LIDA(AuditOperation.MENSAGEM, "Leitura de mensagem de um usuário do sistema"),
     CONSULTA_MENSAGEM(AuditOperation.MENSAGEM, "Consulta de mensagem"),
-
     ;
 
     private AuditOperation operation;
