@@ -20,6 +20,10 @@ public enum AuditOperationType {
     CADASTRO_MENSAGEM(AuditOperation.MENSAGEM, "Cadastro de mensagem"),
     MARCAR_MENSAGEM_COMO_LIDA(AuditOperation.MENSAGEM, "Leitura de mensagem de um usuário do sistema"),
     CONSULTA_MENSAGEM(AuditOperation.MENSAGEM, "Consulta de mensagem"),
+    CADASTRO_QUALIFICADOR(AuditOperation.QUALIFICADOR, "Cadastro de qualificador de card"),
+    ATUALIZACAO_QUALIFICADOR(AuditOperation.QUALIFICADOR, "Atualização de qualificador de card"),
+    CONSULTA_QUALIFICADOR(AuditOperation.QUALIFICADOR, "Consulta de qualificador de card")
+
     ;
     private AuditOperation operation;
     private String detail;
