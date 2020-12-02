@@ -34,6 +34,10 @@ public class JsonUtils {
         }
     }
 
+    public static JsonNode valueToTree(Object fromValue) {
+        return getObjectMapper().valueToTree(fromValue);
+    }
+
     public static <T> T safeParse(String value, Class<T> targetClass) {
         var mapper = getObjectMapper();
 
@@ -49,8 +53,6 @@ public class JsonUtils {
     }
 
     public static <T> T safeParse(JsonNode value, Class<T> targetClass) {
-        var mapper = new ObjectMapper();
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        return mapper.convertValue(value, targetClass);
+        return getObjectMapper().convertValue(value, targetClass);
     }
 }
