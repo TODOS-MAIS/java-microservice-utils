@@ -22,9 +22,14 @@ public enum AuditOperationType {
     CONSULTA_MENSAGEM(AuditOperation.MENSAGEM, "Consulta de mensagem"),
     CADASTRO_QUALIFICADOR(AuditOperation.QUALIFICADOR, "Cadastro de qualificador de card"),
     ATUALIZACAO_QUALIFICADOR(AuditOperation.QUALIFICADOR, "Atualização de qualificador de card"),
-    CONSULTA_QUALIFICADOR(AuditOperation.QUALIFICADOR, "Consulta de qualificador de card")
-
+    CONSULTA_QUALIFICADOR(AuditOperation.QUALIFICADOR, "Consulta de qualificador de card"),
+    CONSULTA_GRUPO(AuditOperation.GRUPO, "Consulta de grupo"),
+    CADASTRO_GRUPO(AuditOperation.GRUPO, "Cadastro de grupo"),
+    ATUALIZACAO_GRUPO(AuditOperation.GRUPO, "Atualização de grupo"),
+    CADASTRO_CARD_GRUPO(AuditOperation.GRUPO, "Cadastro de card para um grupo"),
+    ATUALIZACAO_CARD_GRUPO(AuditOperation.GRUPO, "Cadastro de card para um grupo"),
     ;
+
     private AuditOperation operation;
     private String detail;
 }
