@@ -22,7 +22,8 @@ public enum AuditOperation {
 	WEBHOOK_PROTOCOLO("Operação de webhook protocol"),
 	ANJO("Operação do anjo"),
 	MENSAGEM("Operação de mensagem ao usuário"),
-	QUALIFICADOR("Operação de qualificador de cards")
+	QUALIFICADOR("Operação de qualificador de cards"),
+	GRUPO("Operação de grupo")
 	;
 
 	private String descricao;
