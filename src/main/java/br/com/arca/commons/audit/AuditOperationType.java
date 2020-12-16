@@ -30,6 +30,9 @@ public enum AuditOperationType {
     ATUALIZACAO_CARD_GRUPO(AuditOperation.GRUPO, "Atualização de card para um grupo"),
     CADASTRO_CARD_PARCEIRO(AuditOperation.GRUPO, "Cadastro de card para um parceiro"),
     ATUALIZACAO_CARD_PARCEIRO(AuditOperation.GRUPO, "Atualização de card para um parceiro"),
+    ATUALIZACAO_CARD_GRUPO(AuditOperation.GRUPO, "Cadastro de card para um grupo"),
+    CADASTRO_CARD_OFERTA(AuditOperation.GRUPO, "Cadastro de card para uma oferta"),
+    ATUALIZACAO_CARD_OFERTA(AuditOperation.GRUPO, "Atualização de card para uma oferta")
     ;
 
     private AuditOperation operation;
