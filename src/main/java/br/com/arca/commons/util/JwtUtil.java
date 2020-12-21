@@ -46,7 +46,7 @@ public class JwtUtil implements Serializable {
     }
 
     protected String doGenerateToken(Map<String, Object> claims, String subject, String id, long validity) {
-        return doGenerateToken(claims, subject, id, validity, SignatureAlgorithm.HS512, secret);
+        return doGenerateToken(claims, subject, id, validity, SignatureAlgorithm.HS512, Base64.getEncoder().encodeToString(secret.getBytes()));
     }
 
     protected String doGenerateToken(Map<String, Object> claims, String subject, String id, long validity, SignatureAlgorithm algorithm,
