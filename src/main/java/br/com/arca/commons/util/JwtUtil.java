@@ -15,9 +15,7 @@ import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 
 @RequiredArgsConstructor
@@ -32,7 +30,13 @@ public class JwtUtil implements Serializable {
 
     //for retrieveing any information from token we will need the secret key
     protected final Claims getAllClaimsFromToken(String token) throws ExpiredJwtException {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+        return Jwts.parser().setSigningKey(Base64.getEncoder().encodeToString(secret.getBytes())).parseClaimsJws(token).getBody();
+    }
+
+   public List<String> getAllRolesFromToken(String token) throws ExpiredJwtException {
+        var claims = getAllClaimsFromToken(token);
+        var roles = claims.get("ROLES", List.class);
+        return roles;
     }
 
     //check if the token has expired
