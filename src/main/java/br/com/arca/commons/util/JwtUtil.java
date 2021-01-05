@@ -9,6 +9,10 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -17,11 +21,15 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Component
 @Slf4j
 public class JwtUtil implements Serializable {
+    private String ROLES = "ROLES";
+    private String TYPE = "TYPE";
+
     private static final long serialVersionUID = -2550185165626007488L;
     protected static final long JWT_TOKEN_VALIDITY = 30 * 60 * 60;
     @Value("${jwt.secret}")
@@ -35,14 +43,17 @@ public class JwtUtil implements Serializable {
 
    public List<String> getAllRolesFromToken(String token) throws ExpiredJwtException {
         var claims = getAllClaimsFromToken(token);
-        var roles = claims.get("ROLES", List.class);
+        var roles = claims.get(ROLES, List.class);
         return roles;
     }
 
-    //check if the token has expired
-    protected final Boolean isTokenExpired(String token) {
-        final var expiration = getExpirationDateFromToken(token);
-        return expiration.before(new Date());
+    public final boolean isTokenExpired(String token) {
+        try {
+            final var expiration = getExpirationDateFromToken(token);
+            return expiration.before(new Date());
+        } catch (ExpiredJwtException e) {
+            return true;
+        }
     }
 
     protected String doGenerateToken(Map<String, Object> claims, String subject, String id, long validity) {
@@ -54,6 +65,10 @@ public class JwtUtil implements Serializable {
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + validity * 1000)).setId(id)
                 .signWith(algorithm, secret).compact();
+    }
+
+    public Optional<String> getToken() {
+        return getToken(request);
     }
 
     /**
@@ -123,7 +138,7 @@ public class JwtUtil implements Serializable {
     }
 
     public Optional<String> getTypeToken(String token) {
-        var type = getAllClaimsFromToken(token).get("TYPE");
+        var type = getAllClaimsFromToken(token).get(TYPE);
         if(type == null)
             return Optional.empty();
         return Optional.of((String)type);
@@ -233,6 +248,14 @@ public class JwtUtil implements Serializable {
     public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
         final var claims = getAllClaimsFromToken(token);
         return claimsResolver.apply(claims);
+    }
+
+    public Authentication getAuthentication(String token) {
+        var username = getClaimFromToken(token, Claims::getSubject);
+        var roles = getAllRolesFromToken(token);
+        var profileAuthorities = roles.parallelStream().map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+        return new UsernamePasswordAuthenticationToken(username, null, profileAuthorities);
     }
 }
 
