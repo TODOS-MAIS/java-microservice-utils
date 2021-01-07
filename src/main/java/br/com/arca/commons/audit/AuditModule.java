@@ -1,5 +1,5 @@
 package br.com.arca.commons.audit;
 
 public enum AuditModule {
-    MARKETPLACE, ARCA;
+    ARCA, MARKETPLACE, ADMIN, LINK_UNIVERSAL;
 }
