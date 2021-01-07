@@ -4,9 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.http.HttpStatus;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @NoArgsConstructor
@@ -22,9 +20,7 @@ public class AuditPayload {
     @NotNull(message = "type is required")
     private AuditType type;
     @NotNull(message = "operationType is required")
-    private AuditOperationType operationType;
-    @NotNull(message = "status is required")
-    private HttpStatus status;
+    private CommonAuditOperationType operationType;
     @NotNull(message = "logLevel is required")
     private AuditLogLevel logLevel;
     private String detail;

@@ -41,7 +41,7 @@ public class JwtUtil implements Serializable {
         return Jwts.parser().setSigningKey(Base64.getEncoder().encodeToString(secret.getBytes())).parseClaimsJws(token).getBody();
     }
 
-   public List<String> getAllRolesFromToken(String token) throws ExpiredJwtException {
+    public List<String> getAllRolesFromToken(String token) throws ExpiredJwtException {
         var claims = getAllClaimsFromToken(token);
         var roles = claims.get(ROLES, List.class);
         return roles;
@@ -75,6 +75,7 @@ public class JwtUtil implements Serializable {
      * Gets the token by the request, if it's present in header.
      * JWT Token is in the form "Bearer token". Remove Bearer word and get
      * only the Token
+     *
      * @param request Request with the header
      * @return JwtToken in the header, if present.
      */
@@ -85,11 +86,11 @@ public class JwtUtil implements Serializable {
             if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
                 return Optional.of(requestTokenHeader.substring(7));
             } else {
-                log.warn(String.format("JWT Token does not begin with Bearer String, token={}",requestTokenHeader));
+                log.warn(String.format("JWT Token does not begin with Bearer String, token={}", requestTokenHeader));
 
                 return Optional.empty();
             }
-        } catch(IllegalStateException ex) {
+        } catch (IllegalStateException ex) {
             log.warn(CommonLogs.REQUEST_SCOPE_REQUIRED.text());
 
             return Optional.empty();
@@ -107,7 +108,7 @@ public class JwtUtil implements Serializable {
     }
 
     public Optional<JwtVo> generateJwtVo(String token) {
-        if(!StringUtils.hasText(token)) {
+        if (!StringUtils.hasText(token)) {
             return Optional.empty();
         }
 
@@ -139,88 +140,88 @@ public class JwtUtil implements Serializable {
 
     public Optional<String> getTypeToken(String token) {
         var type = getAllClaimsFromToken(token).get(TYPE);
-        if(type == null)
+        if (type == null)
             return Optional.empty();
-        return Optional.of((String)type);
+        return Optional.of((String) type);
     }
 
     public Optional<Object> getProtocol(String token) {
         final var typeToken = getTypeToken(token);
-        if(!typeToken.isEmpty()){
+        if (!typeToken.isEmpty()) {
             var protocol = getAllClaimsFromToken(token).get("PROTOCOL");
-            if(protocol == null) {
+            if (protocol == null) {
                 return Optional.empty();
             }
-            return Optional.of((String)protocol);
+            return Optional.of((String) protocol);
         }
         return Optional.empty();
     }
 
     public Optional<Object> getCpf(String token) {
         final var typeToken = getTypeToken(token);
-        if(!typeToken.isEmpty()){
+        if (!typeToken.isEmpty()) {
             var protocol = getAllClaimsFromToken(token).get("CPF");
-            if(protocol == null) {
+            if (protocol == null) {
                 return Optional.empty();
             }
-            return Optional.of((String)protocol);
+            return Optional.of((String) protocol);
         }
         return Optional.empty();
     }
 
     public Optional<Object> getNmeOperator(String token) {
         final var typeToken = getTypeToken(token);
-        if(!typeToken.isEmpty()){
+        if (!typeToken.isEmpty()) {
             var protocol = getAllClaimsFromToken(token).get("NMEOPETATOR");
-            if(protocol == null) {
+            if (protocol == null) {
                 return Optional.empty();
             }
-            return Optional.of((String)protocol);
+            return Optional.of((String) protocol);
         }
         return Optional.empty();
     }
 
     public Optional<Integer> getIdBenf(String token) {
         final var typeToken = getTypeToken(token);
-        if(!typeToken.isEmpty()){
+        if (!typeToken.isEmpty()) {
             var idBenef = getAllClaimsFromToken(token).get("IDBENEF");
-            if(idBenef == null) {
+            if (idBenef == null) {
                 return Optional.empty();
             }
-            return Optional.of(((Integer)idBenef));
+            return Optional.of(((Integer) idBenef));
         }
         return Optional.empty();
     }
 
     public Optional<Integer> getIdAngel(String token) {
         final var typeToken = getTypeToken(token);
-        if(!typeToken.isEmpty()){
+        if (!typeToken.isEmpty()) {
             var idAngel = getAllClaimsFromToken(token).get("ID");
-            if(idAngel == null) {
+            if (idAngel == null) {
                 return Optional.empty();
             }
-            return Optional.of(((Integer)idAngel));
+            return Optional.of(((Integer) idAngel));
         }
         return Optional.empty();
     }
 
     public Optional<String> getBenfName(String token) {
         final var typeToken = getTypeToken(token);
-        if(!typeToken.isEmpty()){
+        if (!typeToken.isEmpty()) {
             var idBenef = getAllClaimsFromToken(token).get("NAME_BENEF");
-            if(idBenef == null) {
+            if (idBenef == null) {
                 return Optional.empty();
             }
-            return Optional.of(((String)idBenef));
+            return Optional.of(((String) idBenef));
         }
         return Optional.empty();
     }
 
     public Optional<Long> getDeliveryTokenId(String token) {
         final var typeToken = getTypeToken(token);
-        if(!typeToken.isEmpty()){
+        if (!typeToken.isEmpty()) {
             var deliveryTokenId = getAllClaimsFromToken(token).get("DELIVERY_TOKEN_ID");
-            if(deliveryTokenId != null) {
+            if (deliveryTokenId != null) {
                 return Optional.of(Long.parseLong(deliveryTokenId.toString()));
             }
         }
@@ -230,9 +231,9 @@ public class JwtUtil implements Serializable {
     public Optional<Long> getId(String token) {
         final var typeToken = getTypeToken(token);
 
-        if(!typeToken.isEmpty()){
+        if (!typeToken.isEmpty()) {
             var id = getAllClaimsFromToken(token).getId();
-            if(id != null) {
+            if (id != null) {
                 return Optional.of(Long.parseLong(id.toString()));
             }
         }
