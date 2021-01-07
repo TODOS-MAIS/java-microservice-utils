@@ -8,5 +8,5 @@ public interface Auditable {
     @JsonIgnore
 	String getResponsavel();
     @JsonIgnore
-	AuditOperation getDefaultOperation();
+    AuditOperation getDefaultOperation();
 }

@@ -15,7 +15,6 @@ import javax.persistence.PrePersist;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import br.com.arca.commons.audit.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.ToString;
@@ -51,11 +50,9 @@ public class Auditoria implements Serializable {
 	@Column(name="hash_md5", length=250)
 	private String hashMd5;
 	
-	@Enumerated(EnumType.STRING)
 	@Column(name="operacao_de", length=100)
 	private AuditOperation operacaoDe;
 
-	@Enumerated(EnumType.STRING)
 	private AuditOperationType tipoOperacao;
 
 	@Column(name = "payload_original")
@@ -76,8 +73,6 @@ public class Auditoria implements Serializable {
 	
 	@Column(name="ip_responsavel", length=50)
 	private String ipResponsavel;
-
-	private String codigoRetorno;
 
 	@Enumerated(EnumType.STRING)
 	private AuditLogLevel nivelSeveridade;

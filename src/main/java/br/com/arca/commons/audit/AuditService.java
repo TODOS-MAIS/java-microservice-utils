@@ -14,6 +14,11 @@ import java.util.function.Supplier;
 
 import static br.com.arca.commons.util.StringUtils.*;
 
+/**
+ * @deprecated
+ * please, use {@link AuditActionService} instead
+ */
+@Deprecated
 @Service
 @RequiredArgsConstructor
 @Setter
@@ -47,7 +52,7 @@ public class AuditService {
         defaultAudit(auditable, auditable, ex, type, detalhe);
     }
 
-    public DefaultException auditException(Object payload, AuditType type, AuditOperationType operationType,
+    public DefaultException auditException(Object payload, AuditType type, CommonAuditOperationType operationType,
                                            AuditModule module, String afetado, DefaultException ex) {
         var auditPayload = AuditPayload.builder()
                 .auditable(getAuditable(afetado, null, operationType.getOperation()))
@@ -55,7 +60,6 @@ public class AuditService {
                 .newPayload(ex)
                 .type(type)
                 .operationType(operationType)
-                .status(ex.getHttpStatus())
                 .logLevel(AuditLogLevel.ERROR)
                 .module(module);
 
@@ -64,7 +68,7 @@ public class AuditService {
         return ex;
     }
 
-    public Supplier<DefaultException> auditExceptionSupplier(Object payload, AuditType type, AuditOperationType operationType,
+    public Supplier<DefaultException> auditExceptionSupplier(Object payload, AuditType type, CommonAuditOperationType operationType,
                                                              AuditModule module, String afetado, DefaultException ex) {
         return () -> auditException(payload, type, operationType, module, afetado, ex);
     }
@@ -98,7 +102,6 @@ public class AuditService {
         builder.detalhe(StringUtils.isBlank(auditPayload.getDetail())
                     ? auditPayload.getOperationType().getDetail() : auditPayload.getDetail())
                 .tipoOperacao(auditPayload.getOperationType())
-                .codigoRetorno(String.valueOf(auditPayload.getStatus().value()))
                 .nivelSeveridade(auditPayload.getLogLevel())
                 .modulo(auditPayload.getModule());
 
@@ -156,7 +159,7 @@ public class AuditService {
         repository.save(auditoria);
     }
 
-    public Auditable getAuditable(String afetado, String responsavel, AuditOperation operation) {
+    public Auditable getAuditable(String afetado, String responsavel, CommonAuditOperation operation) {
         return new Auditable() {
             @Override
             public String getAfetado() {
