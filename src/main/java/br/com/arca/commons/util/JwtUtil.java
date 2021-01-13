@@ -15,9 +15,7 @@ import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 
 @RequiredArgsConstructor
@@ -32,7 +30,13 @@ public class JwtUtil implements Serializable {
 
     //for retrieveing any information from token we will need the secret key
     protected final Claims getAllClaimsFromToken(String token) throws ExpiredJwtException {
-        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+        return Jwts.parser().setSigningKey(Base64.getEncoder().encodeToString(secret.getBytes())).parseClaimsJws(token).getBody();
+    }
+
+   public List<String> getAllRolesFromToken(String token) throws ExpiredJwtException {
+        var claims = getAllClaimsFromToken(token);
+        var roles = claims.get("ROLES", List.class);
+        return roles;
     }
 
     //check if the token has expired
@@ -41,16 +45,15 @@ public class JwtUtil implements Serializable {
         return expiration.before(new Date());
     }
 
-
-    //while creating the token -
-    //1. Define  claims of the token, like Issuer, Expiration, Subject, and the ID
-    //2. Sign the JWT using the HS512 algorithm and secret key.
-    //3. According to JWS Compact Serialization(https://tools.ietf.org/html/draft-ietf-jose-json-web-signature-41#section-3.1)
-    //   compaction of the JWT to a URL-safe string
     protected String doGenerateToken(Map<String, Object> claims, String subject, String id, long validity) {
+        return doGenerateToken(claims, subject, id, validity, SignatureAlgorithm.HS512, Base64.getEncoder().encodeToString(secret.getBytes()));
+    }
+
+    protected String doGenerateToken(Map<String, Object> claims, String subject, String id, long validity, SignatureAlgorithm algorithm,
+                                     String secret) {
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + validity * 1000)).setId(id)
-                .signWith(SignatureAlgorithm.HS512, secret).compact();
+                .signWith(algorithm, secret).compact();
     }
 
     /**

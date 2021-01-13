@@ -19,6 +19,7 @@
 		<jjwt.version>0.9.1</jjwt.version>
 		<guava.version>23.6-jre</guava.version>
 		<apache.version>2.6</apache.version>
+		<json.version>20201115</json.version>
 	</properties>
 
 	<dependencies>
@@ -53,7 +54,16 @@
 			<artifactId>commons-lang</artifactId>
 			<version>${apache.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>${json.version}</version>
+		</dependency>
 
+		<dependency>
+			<groupId>javax.validation</groupId>
+			<artifactId>validation-api</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -65,10 +75,14 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>${json.version}</version>
 		</dependency>
 	</dependencies>
 </project>

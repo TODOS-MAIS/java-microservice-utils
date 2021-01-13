@@ -2,6 +2,7 @@ package br.com.arca.commons.exception;
 
 import br.com.arca.commons.vo.ErrorResponse;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import java.util.function.Supplier;
 
 @Getter
+@EqualsAndHashCode
 @AllArgsConstructor
 public class DefaultException extends RuntimeException implements Supplier<DefaultException> {
     private final HttpStatus httpStatus;
