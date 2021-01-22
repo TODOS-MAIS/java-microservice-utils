@@ -19,13 +19,19 @@ public class ArcaValidator {
         var exceptions = validator.validate(bean);
 
         if (!exceptions.isEmpty()) {
-            throw new DefaultException(HttpStatus.BAD_REQUEST, "%s: %s", prefixMessage,
-                    exceptions.stream().map(ConstraintViolation::getMessage).sorted()
-                            .collect(Collectors.joining(Constants.LOG_DELIMITER.getValue())));
+            if (prefixMessage != null) {
+                throw new DefaultException(HttpStatus.BAD_REQUEST, "%s: %s", prefixMessage,
+                        exceptions.stream().map(ConstraintViolation::getMessage).sorted()
+                                .collect(Collectors.joining(Constants.LOG_DELIMITER.getValue())));
+            } else {
+                throw new DefaultException(HttpStatus.BAD_REQUEST, exceptions.stream().map(ConstraintViolation::getMessage).sorted()
+                        .collect(Collectors.joining(Constants.LOG_DELIMITER.getValue())));
+
+            }
         }
     }
 
     public <T> void validate(T bean) {
-        validate(bean, "There was a problem in validating properties");
+        validate(bean, null);
     }
 }
