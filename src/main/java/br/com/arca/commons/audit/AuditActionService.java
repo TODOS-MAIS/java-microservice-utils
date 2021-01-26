@@ -53,7 +53,7 @@ public class AuditActionService {
             return JsonUtils.stringify(payload);
         }
     }
-    public <T extends Exception> Supplier<T>  audit(AuditAction auditAction, Object originalPayload, T ex) {
+    public <T extends Exception> Supplier<T> auditException(AuditAction auditAction, Object originalPayload, T ex) {
         return () -> {
             audit(auditAction, originalPayload, ex);
             return ex;
