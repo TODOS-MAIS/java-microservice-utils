@@ -119,6 +119,7 @@ public class JwtUtil implements Serializable {
         vo.setCpf(getCpf(token).map(String::valueOf).orElse(null));
         vo.setType(getTypeToken(token).orElse(null));
         vo.setIdBenef(getIdBenf(token).orElse(null));
+        vo.setPhone(getPhone(token).orElse(null));
         vo.setIdAngel(getIdAngel(token).orElse(null));
         vo.setDeliveryTokenId(getDeliveryTokenId(token).orElse(null));
         vo.setNameBenef(getBenfName(token).orElse(null));
@@ -177,6 +178,18 @@ public class JwtUtil implements Serializable {
                 return Optional.empty();
             }
             return Optional.of((String) protocol);
+        }
+        return Optional.empty();
+    }
+
+    public Optional<String> getPhone(String token) {
+        final var typeToken = getTypeToken(token);
+        if (!typeToken.isEmpty()) {
+            var phone = getAllClaimsFromToken(token).get("PHONE");
+            if (phone == null) {
+                return Optional.empty();
+            }
+            return Optional.of((String) phone);
         }
         return Optional.empty();
     }
