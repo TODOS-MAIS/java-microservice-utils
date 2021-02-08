@@ -11,6 +11,7 @@ public class JwtVo {
 	private String cpf;
 	private String type;
 	private Integer idBenef;
+	private String phone;
 	private Integer idAngel;
 	private Long deliveryTokenId;
 	private String nameBenef;
