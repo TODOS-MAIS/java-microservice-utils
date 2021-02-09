@@ -51,7 +51,7 @@ public class JwtUtil implements Serializable {
         try {
             final var expiration = getExpirationDateFromToken(token);
             return expiration.before(new Date());
-        } catch (ExpiredJwtException e) {
+        } catch (Exception e) {
             return true;
         }
     }
