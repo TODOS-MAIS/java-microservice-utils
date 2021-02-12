@@ -12,7 +12,7 @@ public class CSVUtil {
 
     public static <T> List<T> parseCSVScanner(Scanner scanner, BiFunction<List<String>, Integer, T> parser, boolean withHeader) {
         var list = new ArrayList<T>();
-        var lineNumber = 0;
+        var lineNumber = 1;
 
         if(withHeader) {
             lineNumber++;
