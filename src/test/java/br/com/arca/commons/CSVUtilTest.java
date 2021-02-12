@@ -18,8 +18,8 @@ public class CSVUtilTest {
     public void parseCSVScannerWithoutHeaderTest() {
         var sc = new Scanner("1;2\n3;4");
         var parseds = CSVUtil.parseCSVScanner(sc, ExampleClass::new);
-        assertEquals(new ExampleClass(Arrays.asList("1", "2"), 0), parseds.get(0));
-        assertEquals(new ExampleClass(Arrays.asList("3", "4"), 1), parseds.get(1));
+        assertEquals(new ExampleClass(Arrays.asList("1", "2"), 1), parseds.get(0));
+        assertEquals(new ExampleClass(Arrays.asList("3", "4"), 2), parseds.get(1));
     }
 
     @DisplayName("Test to parseCSVScanner with header")
@@ -27,8 +27,8 @@ public class CSVUtilTest {
     public void parseCSVScannerWithHeaderTest() {
         var sc = new Scanner("field1;field2\n1;2\n3;4");
         var parseds = CSVUtil.parseCSVScanner(sc, ExampleClass::new, true);
-        assertEquals(new ExampleClass(Arrays.asList("1", "2"), 1), parseds.get(0));
-        assertEquals(new ExampleClass(Arrays.asList("3", "4"), 2), parseds.get(1));
+        assertEquals(new ExampleClass(Arrays.asList("1", "2"), 2), parseds.get(0));
+        assertEquals(new ExampleClass(Arrays.asList("3", "4"), 3), parseds.get(1));
     }
 
     @ToString
