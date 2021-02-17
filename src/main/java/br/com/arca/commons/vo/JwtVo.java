@@ -17,4 +17,5 @@ public class JwtVo {
 	private String protocol;
 	private String nmeOperator;
 	private Date expiration;
+	private Long idCadastroBasicoBenef;
 }

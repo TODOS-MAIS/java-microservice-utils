@@ -125,6 +125,7 @@ public class JwtUtil implements Serializable {
         vo.setProtocol(getProtocol(token).map(String::valueOf).orElse(null));
         vo.setNmeOperator(getNmeOperator(token).map(String::valueOf).orElse(null));
         vo.setExpiration(getExpirationDateFromToken(token));
+        vo.setIdCadastroBasicoBenef(getIdCadastroBasicoBenef(token).orElse(null));
 
         return Optional.of(vo);
     }
@@ -201,6 +202,18 @@ public class JwtUtil implements Serializable {
                 return Optional.empty();
             }
             return Optional.of(((Integer) idAngel));
+        }
+        return Optional.empty();
+    }
+
+    public Optional<Long> getIdCadastroBasicoBenef(String token) {
+        final var typeToken = getTypeToken(token);
+        if (!typeToken.isEmpty() && typeToken.get().equals(Profile.BENEF.name())) {
+            var idCadastroBasico = getAllClaimsFromToken(token).get("ID");
+            if (idCadastroBasico == null) {
+                return Optional.empty();
+            }
+            return Optional.of(((Long) idCadastroBasico));
         }
         return Optional.empty();
     }
