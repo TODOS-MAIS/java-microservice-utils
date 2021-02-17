@@ -213,7 +213,7 @@ public class JwtUtil implements Serializable {
             if (idCadastroBasico == null) {
                 return Optional.empty();
             }
-            return Optional.of(((Long) idCadastroBasico));
+            return Optional.of(Long.parseLong(idCadastroBasico.toString()));
         }
         return Optional.empty();
     }
