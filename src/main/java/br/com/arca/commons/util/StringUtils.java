@@ -114,7 +114,7 @@ public class StringUtils {
 	public static String maskPhone(String phone) {
 		var phoneFormated = phone;
 		try {
-			var mask = phone.length() == 11 ?  new MaskFormatter("(##)#.####.####") : new MaskFormatter("(##)####.####");
+			var mask = phone.length() == 11 ?  new MaskFormatter("(##)#.####-####") : new MaskFormatter("(##)####-####");
 			mask.setValueContainsLiteralCharacters(false);
 			phoneFormated =  mask.valueToString(phone);
 		}catch (ParseException ex){
