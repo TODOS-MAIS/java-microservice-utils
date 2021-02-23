@@ -3,8 +3,10 @@ package br.com.arca.commons.util;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.Normalizer;
+import java.text.ParseException;
 import java.util.Base64;
 
+import javax.swing.text.MaskFormatter;
 import javax.xml.bind.DatatypeConverter;
 
 import br.com.arca.commons.util.log.CommonLogs;
@@ -95,5 +97,29 @@ public class StringUtils {
     	}
     	
     	return false;
+	}
+
+	public static String maskCpf(String cpf) {
+		var cpfFormated = cpf;
+		try {
+			var mask = new MaskFormatter("###.###.###-##");
+			mask.setValueContainsLiteralCharacters(false);
+			cpfFormated =  mask.valueToString(cpf);
+		}catch (ParseException ex){
+			log.error(CommonLogs.PARSE_ERROR.text(), cpf, ex.getMessage());
+		}
+		return cpfFormated;
+	}
+
+	public static String maskPhone(String phone) {
+		var phoneFormated = phone;
+		try {
+			var mask = phone.length() == 11 ?  new MaskFormatter("(##)#.####.####") : new MaskFormatter("(##)####.####");
+			mask.setValueContainsLiteralCharacters(false);
+			phoneFormated =  mask.valueToString(phone);
+		}catch (ParseException ex){
+			log.error(CommonLogs.PARSE_ERROR.text(), phone, ex.getMessage());
+		}
+		return phoneFormated;
 	}
 }
