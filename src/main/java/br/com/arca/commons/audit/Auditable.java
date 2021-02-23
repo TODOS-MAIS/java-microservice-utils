@@ -8,6 +8,7 @@ public interface Auditable {
     @JsonIgnore
 	String getResponsavel();
     @JsonIgnore
+    @Deprecated
     default AuditOperation getDefaultOperation(){ return  null; }
 
 

@@ -51,7 +51,7 @@ public class JwtUtil implements Serializable {
         try {
             final var expiration = getExpirationDateFromToken(token);
             return expiration.before(new Date());
-        } catch (ExpiredJwtException e) {
+        } catch (Exception e) {
             return true;
         }
     }
@@ -119,12 +119,14 @@ public class JwtUtil implements Serializable {
         vo.setCpf(getCpf(token).map(String::valueOf).orElse(null));
         vo.setType(getTypeToken(token).orElse(null));
         vo.setIdBenef(getIdBenf(token).orElse(null));
+        vo.setPhone(getPhone(token).orElse(null));
         vo.setIdAngel(getIdAngel(token).orElse(null));
         vo.setDeliveryTokenId(getDeliveryTokenId(token).orElse(null));
         vo.setNameBenef(getBenfName(token).orElse(null));
         vo.setProtocol(getProtocol(token).map(String::valueOf).orElse(null));
         vo.setNmeOperator(getNmeOperator(token).map(String::valueOf).orElse(null));
         vo.setExpiration(getExpirationDateFromToken(token));
+        vo.setIdCadastroBasicoBenef(getIdCadastroBasicoBenef(token).orElse(null));
 
         return Optional.of(vo);
     }
@@ -181,6 +183,18 @@ public class JwtUtil implements Serializable {
         return Optional.empty();
     }
 
+    public Optional<String> getPhone(String token) {
+        final var typeToken = getTypeToken(token);
+        if (!typeToken.isEmpty()) {
+            var phone = getAllClaimsFromToken(token).get("PHONE");
+            if (phone == null) {
+                return Optional.empty();
+            }
+            return Optional.of((String) phone);
+        }
+        return Optional.empty();
+    }
+
     public Optional<Integer> getIdBenf(String token) {
         final var typeToken = getTypeToken(token);
         if (!typeToken.isEmpty()) {
@@ -201,6 +215,18 @@ public class JwtUtil implements Serializable {
                 return Optional.empty();
             }
             return Optional.of(((Integer) idAngel));
+        }
+        return Optional.empty();
+    }
+
+    public Optional<Long> getIdCadastroBasicoBenef(String token) {
+        final var typeToken = getTypeToken(token);
+        if (!typeToken.isEmpty() && typeToken.get().equals(Profile.BENEF.name())) {
+            var idCadastroBasico = getAllClaimsFromToken(token).get("ID");
+            if (idCadastroBasico == null) {
+                return Optional.empty();
+            }
+            return Optional.of(Long.parseLong(idCadastroBasico.toString()));
         }
         return Optional.empty();
     }
