@@ -6,21 +6,29 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class JdbcUtil {
-    public static LocalDateTime getSafeLocalDateTime(ResultSet rs, String column) throws SQLException {
-        var date = rs.getTimestamp(column);
+    public static LocalDateTime getSafeLocalDateTime(ResultSet rs, String column) {
+        try {
+            var date = rs.getTimestamp(column);
 
-        if(date != null) {
-            return date.toLocalDateTime();
+            if(date != null) {
+                return date.toLocalDateTime();
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
 
         return null;
     }
 
-    public static LocalDate getSafeLocalDate(ResultSet rs, String column) throws SQLException {
-        var date = rs.getDate(column);
+    public static LocalDate getSafeLocalDate(ResultSet rs, String column) {
+        try {
+            var date = rs.getDate(column);
 
-        if(date != null) {
-            return date.toLocalDate();
+            if(date != null) {
+                return date.toLocalDate();
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
 
         return null;
@@ -32,6 +40,7 @@ public class JdbcUtil {
 
             return rs.wasNull() ? null : val;
         } catch (Exception ex) {
+            ex.printStackTrace();
             return null;
         }
     }
