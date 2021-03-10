@@ -22,7 +22,9 @@ public class AuditActionService {
     private String getResponsavel(Object originalPayload, Object newPayload) {
         var optionalJwt = jwtUtil.getToken();
         if(optionalJwt.isPresent()) {
-            return jwtUtil.getClaimFromToken(optionalJwt.get(), claim -> claim.get("BASIC_REGISTRATION_ID", String.class));
+            var basicRegistrationId = jwtUtil.getClaimFromToken(optionalJwt.get(), claim -> claim.get("BASIC_REGISTRATION_ID", Integer.class));
+
+            return basicRegistrationId != null ? basicRegistrationId.toString() : null;
         } else if(originalPayload instanceof Auditable) {
             return ((Auditable) originalPayload).getResponsavel();
         } else if(newPayload instanceof Auditable) {
@@ -53,11 +55,14 @@ public class AuditActionService {
             return JsonUtils.stringify(payload);
         }
     }
-    public <T extends Exception> Supplier<T> auditException(AuditAction auditAction, Object originalPayload, T ex) {
-        return () -> {
-            audit(auditAction, originalPayload, ex);
-            return ex;
-        };
+
+    public <T extends Exception> Supplier<T> getAuditExceptionSupplier(AuditAction auditAction, Object originalPayload, T ex) {
+        return () ->  auditException(auditAction, originalPayload, ex);
+    }
+
+    public <T extends Exception> T auditException(AuditAction auditAction, Object originalPayload, T ex) {
+        audit(auditAction, originalPayload, ex);
+        return ex;
     }
 
     public void audit(AuditAction auditAction, Object originalPayload, Object newPayload) {

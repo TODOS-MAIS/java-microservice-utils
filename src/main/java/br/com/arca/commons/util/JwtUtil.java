@@ -44,7 +44,7 @@ public class JwtUtil implements Serializable {
     public List<String> getAllRolesFromToken(String token) throws ExpiredJwtException {
         var claims = getAllClaimsFromToken(token);
         var roles = claims.get(ROLES, List.class);
-        return roles;
+        return roles != null ? roles : List.of();
     }
 
     public final boolean isTokenExpired(String token) {
