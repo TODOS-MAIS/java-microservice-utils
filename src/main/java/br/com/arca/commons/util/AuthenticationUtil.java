@@ -7,6 +7,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthenticationUtil {
     public String getAuthenticatedUser() {
-        return SecurityContextHolder.getContext().getAuthentication().getName();
+        return SecurityContextHolder.getContext().getAuthentication().getName() == null ? null : SecurityContextHolder.getContext().getAuthentication().getName();
     }
 }
