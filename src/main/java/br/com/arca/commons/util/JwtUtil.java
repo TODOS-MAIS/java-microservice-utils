@@ -127,12 +127,23 @@ public class JwtUtil implements Serializable {
         vo.setNmeOperator(getNmeOperator(token).map(String::valueOf).orElse(null));
         vo.setExpiration(getExpirationDateFromToken(token));
         vo.setIdCadastroBasicoBenef(getIdCadastroBasicoBenef(token).orElse(null));
-        vo.setUpdateRegistrationVO(getUpdateRegistrationVO(token).map(String::valueOf).orElse(null));
+        vo.setNewPhoneNumber(getNewPhoneNumber(token).orElse(null));
 
         return Optional.of(vo);
     }
+    private Optional<String> getNewPhoneNumber(String token) {
+    	 final var typeToken = getTypeToken(token);
+         if (!typeToken.isEmpty()) {
+             var newPhoneNumber = getAllClaimsFromToken(token).get("NEW_PHONE_NUMBER");
+             if (newPhoneNumber == null) {
+                 return Optional.empty();
+             }
+             return Optional.of((String) newPhoneNumber);
+         }
+         return Optional.empty();
+	}
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
+	public Boolean validateToken(String token, UserDetails userDetails) {
         final var username = getUsernameFromToken(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
