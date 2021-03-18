@@ -8,13 +8,13 @@ import java.util.Objects;
 public class CleanData {
 
     public String cleanCpf(String cpf){
-        if(cpf == null) return null;
+        if(StringUtils.isBlank(cpf)) return null;
         
         return cpf.replaceAll("\\D", "");
     }
 
     public String cleanPhone(String phone){
-        if(phone == null) return null;
+        if(StringUtils.isBlank(phone)) return null;
         
         return phone.replaceAll("\\D", "");
     }
