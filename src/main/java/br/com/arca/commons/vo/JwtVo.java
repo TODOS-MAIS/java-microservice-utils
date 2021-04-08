@@ -19,4 +19,5 @@ public class JwtVo {
 	private String nmeOperator;
 	private Date expiration;
 	private Long idCadastroBasicoBenef;
+	private String newPhoneNumber;
 }

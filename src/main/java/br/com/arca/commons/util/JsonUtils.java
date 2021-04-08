@@ -44,7 +44,7 @@ public class JsonUtils {
         var mapper = getObjectMapper();
 
         try {
-            var jsonNode = mapper.readTree(value);
+            var jsonNode = mapper.readTree(value); 
 
             return safeParse(jsonNode, targetClass);
         } catch (JsonProcessingException e) {
