@@ -44,4 +44,15 @@ public class JdbcUtil {
             return null;
         }
     }
+
+    public static Integer getSafeInt(ResultSet rs, String column) {
+        try {
+            var val = rs.getInt(column);
+
+            return rs.wasNull() ? null : val;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
 }
