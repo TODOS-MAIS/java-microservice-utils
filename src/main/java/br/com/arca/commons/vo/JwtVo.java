@@ -2,6 +2,7 @@ package br.com.arca.commons.vo;
 
 import java.util.Date;
 
+import br.com.arca.commons.util.Profile;
 import lombok.Data;
 
 @Data
@@ -20,4 +21,14 @@ public class JwtVo {
 	private Date expiration;
 	private Long idCadastroBasicoBenef;
 	private String newPhoneNumber;
+
+	public Long getCadastroBasicoAffectedId() {
+		if(type.equals(Profile.BENEF.name())) {
+			return idCadastroBasicoBenef;
+		} else if(type.equals(Profile.ATRECEPATIVO.name())) {
+			return idBenef != null ? idBenef.longValue() : null;
+		} else {
+			return null;
+		}
+	}
 }
