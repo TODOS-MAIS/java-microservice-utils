@@ -10,4 +10,19 @@ public class DateUtil {
         }
         return (!dateToCompare.isBefore(startDate) && endDate == null) || !(dateToCompare.isBefore(startDate) || dateToCompare.isAfter(endDate));
     }
+
+    public static boolean isDateNotExpired(LocalDateTime dateToCompare, LocalDateTime startDate, LocalDateTime endDate) {
+        if (startDate == null) {
+            return false;
+        }
+        return (!dateToCompare.isBefore(startDate) && endDate == null) || !(dateToCompare.isBefore(startDate) || dateToCompare.isAfter(endDate));
+    }
+
+    public static boolean isDateExpired(LocalDate dateToCompare, LocalDate startDate, LocalDate endDate) {
+        return !isDateNotExpired(dateToCompare, startDate, endDate);
+    }
+
+    public static boolean isDateExpired(LocalDateTime dateToCompare, LocalDateTime startDate, LocalDateTime endDate) {
+        return !isDateNotExpired(dateToCompare, startDate, endDate);
+    }
 }
