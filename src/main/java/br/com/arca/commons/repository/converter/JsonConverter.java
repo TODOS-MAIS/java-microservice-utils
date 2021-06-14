@@ -11,7 +11,7 @@ import javax.persistence.Converter;
 public class JsonConverter implements AttributeConverter<JsonNode, String> {
     @Override
     public String convertToDatabaseColumn(JsonNode attribute) {
-        return attribute != null ? attribute.toString() : null;
+        return attribute != null && !attribute.toString().equals("null") ? attribute.toString() : null;
     }
 
     @Override
