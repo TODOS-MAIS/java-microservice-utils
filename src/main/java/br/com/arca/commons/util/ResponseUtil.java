@@ -19,7 +19,7 @@ public class ResponseUtil {
 
     public void setRefreshTokenCookie(UUID refreshToken, String refreshRoute, LocalDateTime expiration) {
         setCookie(refreshTokenCookieName, refreshToken.toString(), "Path=/", "SameSite=None", "Secure",
-                "HttpOnly", "Domain=apiarca.acclabs.com.br");
+                "Domain=acclabs.com.br", "Expires=Wed, 30 Aug 2022 00:00:00 GMT");
     }
 
     public void setCookie(String key, String value, String... options) {
