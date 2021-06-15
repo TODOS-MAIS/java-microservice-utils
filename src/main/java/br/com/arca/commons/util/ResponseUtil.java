@@ -18,18 +18,19 @@ public class ResponseUtil {
     private String refreshTokenCookieName;
 
     public void setRefreshTokenCookie(UUID refreshToken, String refreshRoute, LocalDateTime expiration) {
-        setCookie(refreshTokenCookieName, refreshToken.toString(), "SameSite=None", "Secure", "HttpOnly", "Path=/");
+        setCookie(refreshTokenCookieName, refreshToken.toString(), "Path=/", "SameSite=None", "Secure",
+                "HttpOnly");
     }
 
     public void setCookie(String key, String value, String... options) {
-        var parsedOptions = Optional.ofNullable(options).map(item -> String.join(";", item)).orElse("");
+        var parsedOptions = Optional.ofNullable(options).map(item -> String.join("; ", item)).orElse("");
         var sb = new StringBuilder()
                 .append(key)
                 .append("=")
                 .append(value)
-                .append(";")
+                .append("; ")
                 .append(parsedOptions);
 
-        response.addHeader("Set-Cookie", sb.toString());
+        response.setHeader("Set-Cookie", sb.toString());
     }
 }
