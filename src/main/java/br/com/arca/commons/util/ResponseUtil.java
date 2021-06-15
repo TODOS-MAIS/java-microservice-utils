@@ -18,8 +18,7 @@ public class ResponseUtil {
     private String refreshTokenCookieName;
 
     public void setRefreshTokenCookie(UUID refreshToken, String refreshRoute, LocalDateTime expiration) {
-        setCookie(refreshTokenCookieName, refreshToken.toString(), "SameSite=None", "Secure",
-                "Path="+refreshRoute, "Expires="+expiration.toString());
+        setCookie(refreshTokenCookieName, refreshToken.toString(), "SameSite=None", "Secure", "HttpOnly", "Path=/");
     }
 
     public void setCookie(String key, String value, String... options) {
@@ -31,6 +30,6 @@ public class ResponseUtil {
                 .append(";")
                 .append(parsedOptions);
 
-        response.setHeader("Set-Cookie", sb.toString());
+        response.addHeader("Set-Cookie", sb.toString());
     }
 }
