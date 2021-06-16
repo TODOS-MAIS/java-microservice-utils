@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -18,8 +20,8 @@ public class ResponseUtil {
     private String refreshTokenCookieName;
 
     public void setRefreshTokenCookie(UUID refreshToken, String refreshRoute, LocalDateTime expiration) {
-        setCookie(refreshTokenCookieName, refreshToken.toString(), "Path=/", "SameSite=None", "Secure",
-                "Domain=acclabs.com.br", "Expires=Wed, 30 Aug 2022 00:00:00 GMT");
+        setCookie(refreshTokenCookieName, refreshToken.toString(), "Path="+refreshRoute, "SameSite=None", "Secure",
+                "HttpOnly", "Expires="+ expiration.atZone(ZoneId.of("GMT")).format(DateTimeFormatter.RFC_1123_DATE_TIME));
     }
 
     public void setCookie(String key, String value, String... options) {
