@@ -25,8 +25,8 @@ public class ResponseUtil {
                 "Expires="+ expiration.atZone(ZoneId.of("GMT")).format(DateTimeFormatter.RFC_1123_DATE_TIME));
     }
 
-    public void removeRefreshTokenCookie() {
-        setRefreshTokenCookie(null, null, LocalDateTime.now().minusYears(1));
+    public void removeRefreshTokenCookie(String refreshRoute) {
+        setRefreshTokenCookie(null, refreshRoute, LocalDateTime.now().minusYears(1));
     }
 
     public void setCookie(String key, String value, String... options) {
