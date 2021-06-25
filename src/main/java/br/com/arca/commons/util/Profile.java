@@ -12,7 +12,8 @@ public enum Profile {
     ARCAADM,
     ARCASEG,
     EXTERNAL_ACCESS,
-    PUBLIC;
+    PUBLIC,
+    ANONIMO;
 
     @JsonValue
     @Override
