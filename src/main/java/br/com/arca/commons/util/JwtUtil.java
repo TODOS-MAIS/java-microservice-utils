@@ -22,11 +22,13 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 @Component
 @Slf4j
 public class JwtUtil implements Serializable {
+    public static final String REFRESH_TOKEN = "REFRESH_TOKEN";
     private String ROLES = "ROLES";
     private String TYPE = "TYPE";
 
@@ -44,7 +46,7 @@ public class JwtUtil implements Serializable {
     public List<String> getAllRolesFromToken(String token) throws ExpiredJwtException {
         var claims = getAllClaimsFromToken(token);
         var roles = claims.get(ROLES, List.class);
-        return roles != null ? roles : List.of();
+        return roles != null ? roles : new ArrayList<>();
     }
 
     public final boolean isTokenExpired(String token) {
@@ -128,9 +130,23 @@ public class JwtUtil implements Serializable {
         vo.setExpiration(getExpirationDateFromToken(token));
         vo.setIdCadastroBasicoBenef(getIdCadastroBasicoBenef(token).orElse(null));
         vo.setNewPhoneNumber(getNewPhoneNumber(token).orElse(null));
+        vo.setRefreshToken(getRefreshToken(token).orElse(null));
 
         return Optional.of(vo);
     }
+
+    public Optional<String> getRefreshToken(String token) {
+        final var typeToken = getTypeToken(token);
+        if (!typeToken.isEmpty()) {
+            var refreshToken = getAllClaimsFromToken(token).get("REFRESH_TOKEN");
+            if (refreshToken == null) {
+                return Optional.empty();
+            }
+            return Optional.of((String) refreshToken);
+        }
+        return Optional.empty();
+    }
+
     private Optional<String> getNewPhoneNumber(String token) {
     	 final var typeToken = getTypeToken(token);
          if (!typeToken.isEmpty()) {
@@ -301,12 +317,21 @@ public class JwtUtil implements Serializable {
         return claimsResolver.apply(claims);
     }
 
-    public Authentication getAuthentication(String token) {
-        var username = getClaimFromToken(token, Claims::getSubject);
+    public UserDetails getUserDetails(String token) {
         var roles = getAllRolesFromToken(token);
-        var profileAuthorities = roles.parallelStream().map(SimpleGrantedAuthority::new)
+        getTypeToken(token).ifPresent(roles::add);
+        var profileAuthorities = roles.parallelStream()
+                .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
-        return new UsernamePasswordAuthenticationToken(username, null, profileAuthorities);
+
+        var username = getClaimFromToken(token, Claims::getSubject);
+
+        return new User(username, "", profileAuthorities);
+    }
+
+    public Authentication getAuthentication(String token) {
+        var user = getUserDetails(token);
+        return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
     }
 }
 

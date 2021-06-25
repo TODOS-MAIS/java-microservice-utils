@@ -21,6 +21,7 @@ public class JwtVo {
 	private Date expiration;
 	private Long idCadastroBasicoBenef;
 	private String newPhoneNumber;
+	private String refreshToken;
 
 	public Long getCadastroBasicoAffectedId() {
 		if(type.equals(Profile.BENEF.name())) {
