@@ -22,6 +22,7 @@ public class JwtVo {
 	private Long idCadastroBasicoBenef;
 	private String newPhoneNumber;
 	private String refreshToken;
+	private String loginType;
 
 	public Long getCadastroBasicoAffectedId() {
 		if(type.equals(Profile.BENEF.name())) {

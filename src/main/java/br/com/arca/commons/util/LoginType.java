@@ -4,16 +4,12 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-public enum Profile {
-    BENEF,
-    ATRECEPATIVO,
-    ONGANJO,
-    ONGADM,
-    ARCAADM,
-    ARCASEG,
-    EXTERNAL_ACCESS,
-    PUBLIC,
-    ANONIMO;
+public enum LoginType {
+    CPF,
+    TELEFONE,
+    EMAIL,
+    OUTRO,
+    FACEBOOK;
 
     @JsonValue
     @Override
