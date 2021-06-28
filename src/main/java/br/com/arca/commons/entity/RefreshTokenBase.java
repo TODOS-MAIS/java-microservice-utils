@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
-@Entity(name = "RefreshTokenCommons")
+@MappedSuperclass
 @Table(name = "REFRESH_TOKEN")
-public class CommonsRefreshToken {
+public class RefreshTokenBase {
     @GeneratedValue
     @Id
     private UUID id;
