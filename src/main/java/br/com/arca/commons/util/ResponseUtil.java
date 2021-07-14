@@ -22,7 +22,7 @@ public class ResponseUtil {
     public void setRefreshTokenCookie(UUID refreshToken, String refreshRoute, ZonedDateTime expiration) {
         setCookie(refreshTokenCookieName, refreshToken != null ? refreshToken.toString() : null,
                 "Path=/" + (refreshRoute != null ? refreshRoute : ""), "SameSite=None", "Secure", "HttpOnly",
-                "Expires="+ expiration.atZone(ZoneId.of("GMT")).format(DateTimeFormatter.RFC_1123_DATE_TIME));
+                "Expires="+ expiration.toLocalDateTime().atZone(ZoneId.of("GMT")).format(DateTimeFormatter.RFC_1123_DATE_TIME));
     }
 
     public void removeRefreshTokenCookie(String refreshRoute) {
