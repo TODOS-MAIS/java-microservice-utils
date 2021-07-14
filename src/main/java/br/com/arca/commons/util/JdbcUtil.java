@@ -3,15 +3,16 @@ package br.com.arca.commons.util;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 public class JdbcUtil {
-    public static LocalDateTime getSafeLocalDateTime(ResultSet rs, String column) {
+    public static ZonedDateTime getSafeZonedDateTime(ResultSet rs, String column) {
         try {
             var date = rs.getTimestamp(column);
 
             if(date != null) {
-                return date.toLocalDateTime();
+                return date.toInstant().atZone(ZoneId.systemDefault());
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
