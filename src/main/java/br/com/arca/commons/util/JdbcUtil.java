@@ -3,6 +3,7 @@ package br.com.arca.commons.util;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 public class JdbcUtil {
@@ -11,7 +12,7 @@ public class JdbcUtil {
             var date = rs.getTimestamp(column);
 
             if(date != null) {
-                return date.toZonedDateTime();
+                return date.toInstant().atZone(ZoneId.systemDefault());
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
