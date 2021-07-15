@@ -12,7 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -22,7 +22,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private boolean isRefreshTokenValid(String refreshToken) {
         return repository.findById(UUID.fromString(refreshToken)).map(entity ->
-                entity.getAtivo() && DateUtil.isDateNotExpired(ZonedDateTime.now(), entity.getCriadoEm(), entity.getExpiraEm())
+                entity.getAtivo() && DateUtil.isDateNotExpired(LocalDateTime.now(), entity.getCriadoEm(), entity.getExpiraEm())
         ).orElse(false);
     }
 

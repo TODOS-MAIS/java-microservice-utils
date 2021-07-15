@@ -1,7 +1,7 @@
 package br.com.arca.commons.util;
 
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 public class DateUtil {
     public static boolean isDateNotExpired(LocalDate dateToCompare, LocalDate startDate, LocalDate endDate) {
@@ -11,7 +11,7 @@ public class DateUtil {
         return (!dateToCompare.isBefore(startDate) && endDate == null) || !(dateToCompare.isBefore(startDate) || dateToCompare.isAfter(endDate));
     }
 
-    public static boolean isDateNotExpired(ZonedDateTime dateToCompare, ZonedDateTime startDate, ZonedDateTime endDate) {
+    public static boolean isDateNotExpired(LocalDateTime dateToCompare, LocalDateTime startDate, LocalDateTime endDate) {
         if (startDate == null) {
             return false;
         }
@@ -22,7 +22,7 @@ public class DateUtil {
         return !isDateNotExpired(dateToCompare, startDate, endDate);
     }
 
-    public static boolean isDateExpired(ZonedDateTime dateToCompare, ZonedDateTime startDate, ZonedDateTime endDate) {
+    public static boolean isDateExpired(LocalDateTime dateToCompare, LocalDateTime startDate, LocalDateTime endDate) {
         return !isDateNotExpired(dateToCompare, startDate, endDate);
     }
 }
