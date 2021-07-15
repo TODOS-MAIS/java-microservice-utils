@@ -1,7 +1,7 @@
 package br.com.arca.commons.audit;
 
 import java.io.Serializable;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -42,7 +42,7 @@ public class Auditoria implements Serializable {
 	private String afetado;
 
 	@Column(name="criado_em", nullable=false)
-	private ZonedDateTime criadoEm;
+	private LocalDateTime criadoEm;
 
 	@Column(length=250)
 	private String detalhe;
@@ -85,7 +85,7 @@ public class Auditoria implements Serializable {
 	
 	@PrePersist
 	public void prePersist() {
-		this.criadoEm = ZonedDateTime.now();
+		this.criadoEm = LocalDateTime.now();
 	}
 
 	public Long getCodAuditoria() {
@@ -104,11 +104,11 @@ public class Auditoria implements Serializable {
 		this.afetado = afetado;
 	}
 
-	public ZonedDateTime getCriadoEm() {
+	public LocalDateTime getCriadoEm() {
 		return this.criadoEm;
 	}
 
-	public void setCriadoEm(ZonedDateTime criadoEm) {
+	public void setCriadoEm(LocalDateTime criadoEm) {
 		this.criadoEm = criadoEm;
 	}
 

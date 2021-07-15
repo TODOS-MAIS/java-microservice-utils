@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -19,14 +19,14 @@ public class ResponseUtil {
     @Value("${refreshToken.cookie.name}")
     private String refreshTokenCookieName;
 
-    public void setRefreshTokenCookie(UUID refreshToken, String refreshRoute, ZonedDateTime expiration) {
+    public void setRefreshTokenCookie(UUID refreshToken, String refreshRoute, LocalDateTime expiration) {
         setCookie(refreshTokenCookieName, refreshToken != null ? refreshToken.toString() : null,
                 "Path=/" + (refreshRoute != null ? refreshRoute : ""), "SameSite=None", "Secure", "HttpOnly",
-                "Expires="+ expiration.toLocalDateTime().atZone(ZoneId.of("GMT")).format(DateTimeFormatter.RFC_1123_DATE_TIME));
+                "Expires="+ expiration.atZone(ZoneId.of("GMT")).format(DateTimeFormatter.RFC_1123_DATE_TIME));
     }
 
     public void removeRefreshTokenCookie(String refreshRoute) {
-        setRefreshTokenCookie(null, refreshRoute, ZonedDateTime.now().minusYears(1));
+        setRefreshTokenCookie(null, refreshRoute, LocalDateTime.now().minusYears(1));
     }
 
     public void setCookie(String key, String value, String... options) {
