@@ -90,4 +90,31 @@ public class AuditActionService {
                 .build();
         repository.save(audit);
     }
+
+    public void auditWithUserIdentifierType(AuditAction auditAction, Object originalPayload, Object newPayload, AuditUserIdentitier auditUserIdentitier, String affectedUser, String responsibleUser) {
+        var builder = Auditoria.builder();
+        var newPayloadAsString = getStringPayload(newPayload);
+        var originalPayloadAsString = getStringPayload(originalPayload);
+        if (isBlank(originalPayloadAsString)) {
+            builder.hashMd5(textToMd5(newPayloadAsString));
+        } else {
+            builder.hashMd5(textToMd5(originalPayloadAsString));
+        }
+        builder.ipResponsavel(requestUtil.getIpRequest());
+        builder.userAgent(requestUtil.getUserAgent());
+        var audit = builder
+                .payloadOriginal(originalPayloadAsString)
+                .payloadNovo(newPayloadAsString)
+                .afetado(getAfetado(originalPayload, newPayload) == null ? affectedUser : getAfetado(originalPayload, newPayload))
+                .resposavel(getResponsavel(originalPayload, newPayload) == null ? responsibleUser : getResponsavel(originalPayload, newPayload))
+                .tipoAlteracao(auditAction.getAuditType())
+                .operacaoDe(auditAction.getOperationType().getOperation())
+                .detalhe(auditAction.getOperationType().getDetail())
+                .tipoOperacao(auditAction.getOperationType())
+                .nivelSeveridade(auditAction.getLogLevel())
+                .modulo(auditAction.getModule())
+                .tipoIdentificadorUsuario(auditUserIdentitier)
+                .build();
+        repository.save(audit);
+    }
 }
