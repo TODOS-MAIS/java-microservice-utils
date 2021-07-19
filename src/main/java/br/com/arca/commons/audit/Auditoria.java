@@ -80,6 +80,9 @@ public class Auditoria implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private AuditModule modulo;
 
+	@Enumerated(EnumType.STRING)
+	private AuditUserIdentitier auditUserIdentitier;
+
 	public Auditoria() {
 	}
 	
