@@ -81,7 +81,7 @@ public class Auditoria implements Serializable {
 	private AuditModule modulo;
 
 	@Enumerated(EnumType.STRING)
-	private AuditUserIdentitier auditUserIdentitier;
+	private AuditUserIdentitier tipoIdentificadorUsuario;
 
 	public Auditoria() {
 	}
