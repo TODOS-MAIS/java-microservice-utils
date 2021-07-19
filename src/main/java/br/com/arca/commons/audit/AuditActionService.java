@@ -113,7 +113,7 @@ public class AuditActionService {
                 .tipoOperacao(auditAction.getOperationType())
                 .nivelSeveridade(auditAction.getLogLevel())
                 .modulo(auditAction.getModule())
-                .auditUserIdentitier(auditUserIdentitier)
+                .tipoIdentificadorUsuario(auditUserIdentitier)
                 .build();
         repository.save(audit);
     }
