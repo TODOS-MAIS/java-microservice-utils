@@ -11,7 +11,8 @@ import lombok.ToString;
 public enum AuditType {
 	CRIACAO("Operação de criação no sistema"),
 	ATUALIZACAO("Operação de atualização no sistema"),
-	CONSULTA("Operação de consulta no sistema");
+	CONSULTA("Operação de consulta no sistema"),
+	EXCLUSÃO("Operação de exclusão no sistema"),;
 
 	private String descricao;
 }

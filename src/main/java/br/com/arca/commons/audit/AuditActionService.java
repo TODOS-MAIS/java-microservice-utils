@@ -22,6 +22,10 @@ public class AuditActionService {
     private String getResponsavel(Object originalPayload, Object newPayload) {
         var optionalJwt = jwtUtil.getToken();
         if(optionalJwt.isPresent()) {
+            //admin ou atendente: email, nme_login
+            //anjo: cod_anjo, id do jwt
+            //benef: cadastrobasicoId, id do jwt
+            //adicionar tipo codAnjo
             var basicRegistrationId = jwtUtil.getClaimFromToken(optionalJwt.get(), claim -> claim.get("BASIC_REGISTRATION_ID", Integer.class));
 
             return basicRegistrationId != null ? basicRegistrationId.toString() : null;
