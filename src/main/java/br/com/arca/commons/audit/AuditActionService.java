@@ -19,7 +19,7 @@ public class AuditActionService {
     private final JwtUtil jwtUtil;
     private final RequestUtil requestUtil;
 
-    private String getResponsavel(Object originalPayload, Object newPayload) {
+    private AuditoriaResponsavel getResponsavel(Object originalPayload, Object newPayload) {
         var optionalJwt = jwtUtil.getToken();
         if(optionalJwt.isPresent()) {
             var basicRegistrationId = jwtUtil.getClaimFromToken(optionalJwt.get(), claim -> claim.get("BASIC_REGISTRATION_ID", Integer.class));
@@ -34,7 +34,7 @@ public class AuditActionService {
         }
     }
 
-    private String getAfetado(Object originalPayload, Object newPayload) {
+    private AuditoriaAfetado getAfetado(Object originalPayload, Object newPayload) {
         if(originalPayload instanceof Auditable) {
             return ((Auditable) originalPayload).getAfetado();
         } else if(newPayload instanceof Auditable) {
@@ -79,8 +79,8 @@ public class AuditActionService {
         var audit = builder
                 .payloadOriginal(originalPayloadAsString)
                 .payloadNovo(newPayloadAsString)
-                .afetado(getAfetado(originalPayload, newPayload))
-                .resposavel(getResponsavel(originalPayload, newPayload))
+                .auditoriaAfetado(getAfetado(originalPayload, newPayload))
+                .auditoriaResponsavel(getResponsavel(originalPayload, newPayload))
                 .tipoAlteracao(auditAction.getAuditType())
                 .operacaoDe(auditAction.getOperationType().getOperation())
                 .detalhe(auditAction.getOperationType().getDetail())
@@ -91,7 +91,7 @@ public class AuditActionService {
         repository.save(audit);
     }
 
-    public void auditWithUserIdentifierType(AuditAction auditAction, Object originalPayload, Object newPayload, AuditUserIdentitier auditUserIdentitier, String affectedUser, String responsibleUser) {
+    public void auditWithAffectedUserIdentifier(AuditAction auditAction, Object originalPayload, Object newPayload, AuditUserIdentitier auditUserIdentitier, String affectedUser, String responsibleUser) {
         var builder = Auditoria.builder();
         var newPayloadAsString = getStringPayload(newPayload);
         var originalPayloadAsString = getStringPayload(originalPayload);
@@ -105,8 +105,8 @@ public class AuditActionService {
         var audit = builder
                 .payloadOriginal(originalPayloadAsString)
                 .payloadNovo(newPayloadAsString)
-                .afetado(getAfetado(originalPayload, newPayload) == null ? affectedUser : getAfetado(originalPayload, newPayload))
-                .resposavel(getResponsavel(originalPayload, newPayload) == null ? responsibleUser : getResponsavel(originalPayload, newPayload))
+                .auditoriaAfetado(affectedUser)
+                .auditoriaResponsavel(getResponsavel(originalPayload, newPayload) == null ? responsibleUser : getResponsavel(originalPayload, newPayload))
                 .tipoAlteracao(auditAction.getAuditType())
                 .operacaoDe(auditAction.getOperationType().getOperation())
                 .detalhe(auditAction.getOperationType().getDetail())

@@ -3,17 +3,7 @@ package br.com.arca.commons.audit;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQuery;
-import javax.persistence.PrePersist;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,9 +28,6 @@ public class Auditoria implements Serializable {
 	@Column(name="cod_auditoria", unique=true, nullable=false)
 	private Long codAuditoria;
 
-	@Column(length=50)
-	private String afetado;
-
 	@Column(name="criado_em", nullable=false)
 	private LocalDateTime criadoEm;
 
@@ -61,9 +48,6 @@ public class Auditoria implements Serializable {
 	@Column(name = "payload_novo")
 	private String payloadNovo;
 
-	@Column(length=50)
-	private String resposavel;
-
 	@Enumerated(EnumType.STRING)
 	@Column(name="tipo_alteracao", length=50)
 	private AuditType tipoAlteracao;
@@ -80,8 +64,11 @@ public class Auditoria implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private AuditModule modulo;
 
-	@Enumerated(EnumType.STRING)
-	private AuditUserIdentitier tipoIdentificadorUsuario;
+	@Embedded
+	private AuditoriaResponsavel auditoriaResponsavel = new AuditoriaResponsavel();
+
+	@Embedded
+	private AuditoriaAfetado auditoriaAfetado = new AuditoriaAfetado();
 
 	public Auditoria() {
 	}
@@ -100,11 +87,11 @@ public class Auditoria implements Serializable {
 	}
 
 	public String getAfetado() {
-		return this.afetado;
+		return this.auditoriaAfetado.getAfetado();
 	}
 
 	public void setAfetado(String afetado) {
-		this.afetado = afetado;
+		this.auditoriaAfetado.setAfetado(afetado);
 	}
 
 	public LocalDateTime getCriadoEm() {
@@ -148,11 +135,11 @@ public class Auditoria implements Serializable {
 	}
 
 	public String getResposavel() {
-		return this.resposavel;
+		return this.auditoriaResponsavel.getResposavel();
 	}
 
 	public void setResposavel(String resposavel) {
-		this.resposavel = resposavel;
+		this.auditoriaResponsavel.setResposavel(resposavel);
 	}
 	
 	public AuditOperation getOperacaoDe() {
