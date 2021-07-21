@@ -19,30 +19,36 @@ public class AuditActionService {
     private final JwtUtil jwtUtil;
     private final RequestUtil requestUtil;
 
-    private String getResponsavel(Object originalPayload, Object newPayload) {
+    private AuditoriaResponsavel getResponsavel(Object originalPayload, Object newPayload) {
         var optionalJwt = jwtUtil.getToken();
         if(optionalJwt.isPresent()) {
-            //admin ou atendente: email, nme_login
-            //anjo: cod_anjo, id do jwt
-            //benef: cadastrobasicoId, id do jwt
-            //adicionar tipo codAnjo
-            var basicRegistrationId = jwtUtil.getClaimFromToken(optionalJwt.get(), claim -> claim.get("BASIC_REGISTRATION_ID", Integer.class));
-
-            return basicRegistrationId != null ? basicRegistrationId.toString() : null;
+            var profile = jwtUtil.getClaimFromToken(optionalJwt.get(), claim -> claim.get("TYPE", String.class));
+            if(profile.equals(Profile.ARCAADM) || profile.equals(Profile.ATRECEPATIVO)){
+                String email = jwtUtil.getClaimFromToken(optionalJwt.get(), claim -> claim.get("sub", String.class));
+                return new AuditoriaResponsavel(email, AuditUserIdentitier.NME_LOGIN);
+            }
+            if(profile.equals(Profile.BENEF)){
+                String beneficiaryId = jwtUtil.getClaimFromToken(optionalJwt.get(), claim -> claim.get("ID", String.class));
+                return new AuditoriaResponsavel(beneficiaryId, AuditUserIdentitier.CADASTRO_BASICO_ID);
+            }
+            if(profile.equals(Profile.ONGANJO)){
+                String angelId = jwtUtil.getClaimFromToken(optionalJwt.get(), claim -> claim.get("ID", String.class));
+                return new AuditoriaResponsavel(angelId, AuditUserIdentitier.COD_ANJO);
+            }
         } else if(originalPayload instanceof Auditable) {
-            return ((Auditable) originalPayload).getResponsavel();
+            return new AuditoriaResponsavel(((Auditable) originalPayload).getResponsavel(), AuditUserIdentitier.NME_LOGIN);
         } else if(newPayload instanceof Auditable) {
-            return ((Auditable) newPayload).getResponsavel();
-        } else {
-            return authUtil.getAuthenticatedUser();
+            return new AuditoriaResponsavel(((Auditable) newPayload).getResponsavel(), AuditUserIdentitier.NME_LOGIN);
         }
+
+        return new AuditoriaResponsavel(authUtil.getAuthenticatedUser(), AuditUserIdentitier.NME_LOGIN);
     }
 
-    private String getAfetado(Object originalPayload, Object newPayload) {
+    private AuditoriaAfetado getAfetado(Object originalPayload, Object newPayload) {
         if(originalPayload instanceof Auditable) {
-            return ((Auditable) originalPayload).getAfetado();
+            return new AuditoriaAfetado(((Auditable) originalPayload).getAfetado(), AuditUserIdentitier.NME_LOGIN);
         } else if(newPayload instanceof Auditable) {
-            return ((Auditable) newPayload).getAfetado();
+            return new AuditoriaAfetado(((Auditable) newPayload).getAfetado(), AuditUserIdentitier.NME_LOGIN);
         } else {
             return null;
         }
@@ -70,32 +76,14 @@ public class AuditActionService {
     }
 
     public void audit(AuditAction auditAction, Object originalPayload, Object newPayload) {
-        var builder = Auditoria.builder();
-        var newPayloadAsString = getStringPayload(newPayload);
-        var originalPayloadAsString = getStringPayload(originalPayload);
-        if (isBlank(originalPayloadAsString)) {
-            builder.hashMd5(textToMd5(newPayloadAsString));
-        } else {
-            builder.hashMd5(textToMd5(originalPayloadAsString));
-        }
-        builder.ipResponsavel(requestUtil.getIpRequest());
-        builder.userAgent(requestUtil.getUserAgent());
-        var audit = builder
-                .payloadOriginal(originalPayloadAsString)
-                .payloadNovo(newPayloadAsString)
-                .afetado(getAfetado(originalPayload, newPayload))
-                .resposavel(getResponsavel(originalPayload, newPayload))
-                .tipoAlteracao(auditAction.getAuditType())
-                .operacaoDe(auditAction.getOperationType().getOperation())
-                .detalhe(auditAction.getOperationType().getDetail())
-                .tipoOperacao(auditAction.getOperationType())
-                .nivelSeveridade(auditAction.getLogLevel())
-                .modulo(auditAction.getModule())
-                .build();
-        repository.save(audit);
+        auditBase(auditAction, originalPayload, newPayload, getAfetado(originalPayload, newPayload));
     }
 
-    public void auditWithUserIdentifierType(AuditAction auditAction, Object originalPayload, Object newPayload, AuditUserIdentitier auditUserIdentitier, String affectedUser, String responsibleUser) {
+    public void auditWithAffectedUser(AuditAction auditAction, Object originalPayload, Object newPayload, AuditoriaAfetado affectedUser) {
+        auditBase(auditAction, originalPayload, newPayload, affectedUser);
+    }
+
+    public void auditBase(AuditAction auditAction, Object originalPayload, Object newPayload, AuditoriaAfetado affectedAudit) {
         var builder = Auditoria.builder();
         var newPayloadAsString = getStringPayload(newPayload);
         var originalPayloadAsString = getStringPayload(originalPayload);
@@ -109,15 +97,14 @@ public class AuditActionService {
         var audit = builder
                 .payloadOriginal(originalPayloadAsString)
                 .payloadNovo(newPayloadAsString)
-                .afetado(getAfetado(originalPayload, newPayload) == null ? affectedUser : getAfetado(originalPayload, newPayload))
-                .resposavel(getResponsavel(originalPayload, newPayload) == null ? responsibleUser : getResponsavel(originalPayload, newPayload))
+                .auditoriaAfetado(affectedAudit)
+                .auditoriaResponsavel(getResponsavel(originalPayload, newPayload))
                 .tipoAlteracao(auditAction.getAuditType())
                 .operacaoDe(auditAction.getOperationType().getOperation())
                 .detalhe(auditAction.getOperationType().getDetail())
                 .tipoOperacao(auditAction.getOperationType())
                 .nivelSeveridade(auditAction.getLogLevel())
                 .modulo(auditAction.getModule())
-                .tipoIdentificadorUsuario(auditUserIdentitier)
                 .build();
         repository.save(audit);
     }
