@@ -342,6 +342,10 @@ public class JwtUtil implements Serializable {
         return new User(username, "", profileAuthorities);
     }
 
+    public boolean isProfile(Profile profile) {
+        return generateJwtVo().map(JwtVo::getType).map(profile::equals).orElse(false);
+    }
+
     public Authentication getAuthentication(String token) {
         var user = getUserDetails(token);
         return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
