@@ -125,11 +125,11 @@ public class AuditService {
         var jwt = jwtUtil.generateJwtVo();
 
         if (jwt.isPresent()) {
-            builder.resposavel(jwt.get().getSubject());
+            builder.auditoriaResponsavel(new AuditoriaResponsavel(jwt.get().getSubject(), AuditUserIdentitier.NME_LOGIN));
         } else if (isNotBlank(auditable.getResponsavel())) {
-            builder.resposavel(auditable.getResponsavel());
+            builder.auditoriaResponsavel(new AuditoriaResponsavel(auditable.getResponsavel(), AuditUserIdentitier.NME_LOGIN));
         } else {
-            builder.resposavel(authUtil.getAuthenticatedUser());
+            builder.auditoriaResponsavel(new AuditoriaResponsavel(authUtil.getAuthenticatedUser(), AuditUserIdentitier.NME_LOGIN));
         }
 
         var newPayloadAsString = getStringPayload(newPayload);
@@ -150,7 +150,7 @@ public class AuditService {
                 .payloadNovo(newPayloadAsString)
                 .operacaoDe(auditable.getDefaultOperation())
                 .tipoAlteracao(type)
-                .afetado(auditable.getAfetado());
+                .auditoriaAfetado(new AuditoriaAfetado(auditable.getAfetado(), AuditUserIdentitier.NME_LOGIN));
     }
 
     public void save(Auditoria auditoria) {

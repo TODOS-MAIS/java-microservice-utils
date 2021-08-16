@@ -35,7 +35,7 @@ public class JwtUtil implements Serializable {
     private static final long serialVersionUID = -2550185165626007488L;
     protected static final long JWT_TOKEN_VALIDITY = 60 * 60 * 2;
     @Value("${jwt.secret}")
-    private String secret;
+    protected String secret;
     protected final HttpServletRequest request;
 
     //for retrieveing any information from token we will need the secret key
@@ -93,7 +93,7 @@ public class JwtUtil implements Serializable {
                 return Optional.empty();
             }
         } catch (IllegalStateException ex) {
-            log.warn(CommonLogs.REQUEST_SCOPE_REQUIRED.text());
+            log.info(CommonLogs.REQUEST_SCOPE_REQUIRED.text());
 
             return Optional.empty();
         }
@@ -340,6 +340,10 @@ public class JwtUtil implements Serializable {
         var username = getClaimFromToken(token, Claims::getSubject);
 
         return new User(username, "", profileAuthorities);
+    }
+
+    public boolean isProfile(Profile profile) {
+        return generateJwtVo().map(JwtVo::getType).map(profile::equals).orElse(false);
     }
 
     public Authentication getAuthentication(String token) {
