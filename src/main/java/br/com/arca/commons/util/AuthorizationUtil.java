@@ -11,7 +11,7 @@ public class AuthorizationUtil {
     private final JwtUtil jwtUtil;
 
     public void validateCanGetOrUpdate(Long registrationId) {
-        final var forbiddenException = new DefaultException(HttpStatus.FORBIDDEN, ConstantsMessage.FORBIDDEN_ACCESS.text());
+        final var forbiddenException = new DefaultException(HttpStatus.FORBIDDEN, CommonMessages.FORBIDDEN_ACCESS.text());
 
         var jwtVo = jwtUtil.generateJwtVo().orElseThrow(forbiddenException);
 

@@ -11,10 +11,7 @@ import java.security.Principal;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
 public class AuthenticationUtil {
-    private final JwtUtil jwtUtil;
-
     public String getAuthenticatedUser() {
         return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication()).map(Principal::getName).orElse(null);
     }
