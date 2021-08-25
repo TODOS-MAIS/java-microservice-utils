@@ -27,7 +27,7 @@ public class JwtVo {
 	public Long getCadastroBasicoAffectedId() {
 		if(type.equals(Profile.BENEF.name())) {
 			return idCadastroBasicoBenef;
-		} else if(type.equals(Profile.ATRECEPATIVO.name())) {
+		} else if(type.equals(Profile.ATRECEPATIVO.name()) || type.equals(Profile.EXTERNAL_ACCESS.name())) {
 			return idBenef != null ? idBenef.longValue() : null;
 		} else {
 			return null;
