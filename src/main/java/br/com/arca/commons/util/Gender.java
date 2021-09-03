@@ -14,6 +14,6 @@ public enum Gender {
         }
 
         return Arrays.stream(Gender.values()).filter(gender -> gender.name().equalsIgnoreCase(value)).findFirst()
-                .orElseThrow(new DefaultException(HttpStatus.BAD_REQUEST, ConstantsMessage.INVALID_ENUM.text(), value));
+                .orElseThrow(new DefaultException(HttpStatus.BAD_REQUEST, CommonMessages.INVALID_ENUM.text(), value));
     }
 }
