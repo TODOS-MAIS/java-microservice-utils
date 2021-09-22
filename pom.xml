@@ -84,5 +84,9 @@
 			<artifactId>json</artifactId>
 			<version>${json.version}</version>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>com.querydsl</groupId>
+            <artifactId>querydsl-jpa</artifactId>
+        </dependency>
+    </dependencies>
 </project>
