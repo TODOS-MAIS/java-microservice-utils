@@ -132,6 +132,7 @@ public class JwtUtil implements Serializable {
         vo.setNewPhoneNumber(getNewPhoneNumber(token).orElse(null));
         vo.setRefreshToken(getRefreshToken(token).orElse(null));
         vo.setLoginType(getLoginType(token).map(String::valueOf).orElse(null));
+        vo.setIdPartner(getPartnerId(token).orElse(null));
 
         return Optional.of(vo);
     }
@@ -290,6 +291,17 @@ public class JwtUtil implements Serializable {
             var deliveryTokenId = getAllClaimsFromToken(token).get("DELIVERY_TOKEN_ID");
             if (deliveryTokenId != null) {
                 return Optional.of(Long.parseLong(deliveryTokenId.toString()));
+            }
+        }
+        return Optional.empty();
+    }
+
+    public Optional<Long> getPartnerId(String token) {
+        final var typeToken = getTypeToken(token);
+        if (!typeToken.isEmpty()) {
+            var partnerId = getAllClaimsFromToken(token).get("ID");
+            if (partnerId != null) {
+                return Optional.of(Long.parseLong(partnerId.toString()));
             }
         }
         return Optional.empty();
