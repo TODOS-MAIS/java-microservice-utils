@@ -13,6 +13,7 @@ public enum Profile {
     ARCASEG,
     EXTERNAL_ACCESS,
     PUBLIC,
+    PARCEIRO,
     ANONIMO;
 
     @JsonValue
