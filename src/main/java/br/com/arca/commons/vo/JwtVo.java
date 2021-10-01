@@ -31,7 +31,7 @@ public class JwtVo {
 		} else if(type.equals(Profile.ATRECEPATIVO.name()) || type.equals(Profile.EXTERNAL_ACCESS.name())) {
 			return idBenef != null ? idBenef.longValue() : null;
 		} else if(type.equals(Profile.PARCEIRO.name())){
-			return idCadastroBasicoBenef;
+			return idPartner;
 		}
 		 else {
 			return null;
