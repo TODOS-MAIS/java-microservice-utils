@@ -299,7 +299,7 @@ public class JwtUtil implements Serializable {
     public Optional<Long> getPartnerId(String token) {
         final var typeToken = getTypeToken(token);
         if (!typeToken.isEmpty()) {
-            var partnerId = getAllClaimsFromToken(token).get("ID");
+            var partnerId = getAllClaimsFromToken(token).get("BASIC_REGISTRATION_ID");
             if (partnerId != null) {
                 return Optional.of(Long.parseLong(partnerId.toString()));
             }
