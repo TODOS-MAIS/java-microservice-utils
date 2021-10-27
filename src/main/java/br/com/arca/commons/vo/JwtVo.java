@@ -23,13 +23,17 @@ public class JwtVo {
 	private String newPhoneNumber;
 	private String refreshToken;
 	private String loginType;
+	private Long idPartner;
 
 	public Long getCadastroBasicoAffectedId() {
 		if(type.equals(Profile.BENEF.name())) {
 			return idCadastroBasicoBenef;
 		} else if(type.equals(Profile.ATRECEPATIVO.name()) || type.equals(Profile.EXTERNAL_ACCESS.name())) {
 			return idBenef != null ? idBenef.longValue() : null;
-		} else {
+		} else if(type.equals(Profile.PARCEIRO.name())){
+			return idPartner;
+		}
+		 else {
 			return null;
 		}
 	}
