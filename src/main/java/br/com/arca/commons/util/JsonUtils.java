@@ -19,11 +19,11 @@ public class JsonUtils {
                     .registerModule(new JavaTimeModule());
     }
 
-    public static String stringify(Object object, boolean ignoreNulls) {
+    public static String stringify(Object object, boolean ignoreEmpty) {
         ObjectMapper mapper = getObjectMapper();
 
-        if(ignoreNulls) {
-            mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        if(ignoreEmpty) {
+            mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
         }
 
         try {
