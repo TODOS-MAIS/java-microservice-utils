@@ -22,7 +22,6 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 @Component
@@ -40,7 +39,10 @@ public class JwtUtil implements Serializable {
 
     //for retrieveing any information from token we will need the secret key
     protected final Claims getAllClaimsFromToken(String token) throws ExpiredJwtException {
-        return Jwts.parser().setSigningKey(Base64.getEncoder().encodeToString(secret.getBytes())).parseClaimsJws(token).getBody();
+        return Jwts.parser()
+                .setSigningKey(Base64.getEncoder().encodeToString(secret.getBytes()))
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     public List<String> getAllRolesFromToken(String token) throws ExpiredJwtException {
@@ -107,6 +109,22 @@ public class JwtUtil implements Serializable {
         String token = getToken(request).orElse(null);
 
         return generateJwtVo(token);
+    }
+
+    public <T> T getClaimEvenIfJwtIsExpired(String token, JwtClaim claim, Class<T> returnType) {
+        try {
+            return getAllClaimsFromToken(token).get(claim.name(), returnType);
+        } catch(ExpiredJwtException ex) {
+            return ex.getClaims().get(claim.name(), returnType);
+        }
+    }
+
+    public String getClaimEvenIfJwtIsExpired(String token, JwtClaim claim) {
+        try {
+            return getAllClaimsFromToken(token).get(claim.name(), String.class);
+        } catch(ExpiredJwtException ex) {
+            return ex.getClaims().get(claim.name(), String.class);
+        }
     }
 
     public Optional<JwtVo> generateJwtVo(String token) {
@@ -240,7 +258,7 @@ public class JwtUtil implements Serializable {
     public Optional<Integer> getIdAngel(String token) {
         final var typeToken = getTypeToken(token);
         if (!typeToken.isEmpty()) {
-            var idAngel = getAllClaimsFromToken(token).get("ID");
+            var idAngel = getAllClaimsFromToken(token).get(JwtClaim.ID.name());
             if (idAngel == null) {
                 return Optional.empty();
             }
@@ -252,7 +270,7 @@ public class JwtUtil implements Serializable {
     public Optional<Long> getIdCadastroBasicoBenef(String token) {
         final var typeToken = getTypeToken(token);
         if (!typeToken.isEmpty() && typeToken.get().equals(Profile.BENEF.name())) {
-            var idCadastroBasico = getAllClaimsFromToken(token).get("ID");
+            var idCadastroBasico = getAllClaimsFromToken(token).get(JwtClaim.ID.name());
             if (idCadastroBasico == null) {
                 return Optional.empty();
             }
