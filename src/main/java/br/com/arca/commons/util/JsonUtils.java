@@ -1,5 +1,6 @@
 package br.com.arca.commons.util;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -9,23 +10,21 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 public class JsonUtils {
-    private static ObjectMapper objectMapper;
-
     public static ObjectMapper getObjectMapper() {
-        if(objectMapper == null) {
-            objectMapper = JsonMapper
+        return JsonMapper
                     .builder()
                     .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
                     .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
                     .build()
                     .registerModule(new JavaTimeModule());
-        }
-        
-        return objectMapper;
     }
-    
-    public static String stringify(Object object) {
+
+    public static String stringify(Object object, boolean ignoreEmpty) {
         ObjectMapper mapper = getObjectMapper();
+
+        if(ignoreEmpty) {
+            mapper.setSerializationInclusion(JsonInclude.Include.NON_EMPTY);
+        }
 
         try {
             return mapper.writeValueAsString(object);
@@ -34,6 +33,9 @@ public class JsonUtils {
 
             return null;
         }
+    }
+    public static String stringify(Object object) {
+        return stringify(object, false);
     }
 
     public static JsonNode valueToTree(Object fromValue) {
