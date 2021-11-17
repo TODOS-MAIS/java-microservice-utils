@@ -32,8 +32,9 @@ public class JwtVo {
 			return idBenef != null ? idBenef.longValue() : null;
 		} else if(type.equals(Profile.PARCEIRO.name())){
 			return idPartner;
-		}
-		 else {
+		} else if (type.equals(Profile.ONGANJO.name())) {
+			return idAngel != null ? idAngel.longValue() : null;
+		} else {
 			return null;
 		}
 	}
