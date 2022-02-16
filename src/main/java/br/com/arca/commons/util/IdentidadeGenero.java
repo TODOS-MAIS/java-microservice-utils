@@ -6,12 +6,12 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum IdentidadeGenero {
-    MULHER_CIS("Mulher cis"),
-    HOMEM_CIS("Homem cis"),
-    MULHER_TRANS("Mulher trans"),
-    HOMEM_TRANS("Homem trans"),
-    NAO_BINARIO("Não binário"),
-    OUTROS("Outros");
+    MULHER_CIS("MULHER_CIS"),
+    HOMEM_CIS("HOMEM_CIS"),
+    MULHER_TRANS("MULHER_TRANS"),
+    HOMEM_TRANS("HOMEM_TRANS"),
+    NAO_BINARIO("NAO_BINARIO"),
+    OUTROS("OUTROS");
 
     private String description;
 
