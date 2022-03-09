@@ -20,6 +20,7 @@ public enum OrderEventStatus {
     TROCA,
     AGENDADO,
     OUTROS,
+    EM_PROGRESSO,
     ;
 
     public static OrderEventStatus parse(String value) {
