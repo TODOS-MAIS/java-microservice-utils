@@ -3,7 +3,7 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      java: openjdk11
+      java: corretto11
   build:
     commands:
       - echo Building project on `date`
@@ -13,5 +13,5 @@ phases:
       - echo Build completed on `date`
 artifacts:
   files:
-    - commons.jar
+    - '**/*'
   discard-paths: yes
