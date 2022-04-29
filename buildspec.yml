@@ -10,5 +10,5 @@ phases:
       - echo Build completed on `date`
 artifacts:
   files:
-    - target/commons.jar
+    - commons.jar
   discard-paths: yes
