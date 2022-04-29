@@ -7,10 +7,15 @@ phases:
   build:
     commands:
       - echo Building project on `date`
-      - mvn install
+      - export JAVA_HOME="$JAVA_11_HOME"
+      - export JRE_HOME="$JRE_11_HOME"
+      - export JDK_HOME="$JDK_11_HOME"
+      - java -version
+      - mvn clean install
   post_build:
     commands:
       - echo Build completed on `date`
 artifacts:
   files:
-    - target/java-microservice-utils.jar
+    - '**/*'
+  base-directory: 'target/my-web-app'
