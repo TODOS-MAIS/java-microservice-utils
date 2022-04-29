@@ -7,11 +7,10 @@ phases:
   build:
     commands:
       - echo Building project on `date`
-      - mvn clean package
+      - mvn install
   post_build:
     commands:
       - echo Build completed on `date`
 artifacts:
   files:
-    - '**/*'
-  discard-paths: yes
+    - target/java-microservice-utils.jar
