@@ -1,6 +1,9 @@
 version: 0.1
 
 phases:
+  install:
+    runtime-versions:
+      java: openjdk11
   build:
     commands:
       - echo Building project on `date`
