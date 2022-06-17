@@ -23,6 +23,14 @@
 		<log4j2.version>2.15.0</log4j2.version>
 	</properties>
 
+	<distributionManagement>
+		<repository>
+			<id>codeartifact</id>
+			<name>codeartifact</name>
+			<url>https://akipossomais-300209637591.d.codeartifact.us-east-1.amazonaws.com/maven/java-microservice-utils/</url>
+		</repository>
+	</distributionManagement>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
