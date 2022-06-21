@@ -36,6 +36,9 @@ public class RequestUtil {
     public String getIpRequest() {
         try {
             String ip = Optional.ofNullable(request.getHeader("x-forwarded-for")).orElse(request.getRemoteAddr());
+            if (ip.split(",").length > 1) {
+                return ip.split(",")[0].trim()
+            }
             return ip.equals(LOCAL_IP_REMOTE_ADDR) ? "127.0.0.1" : ip;
         } catch (IllegalStateException ex) {
             log.warn(CommonLogs.REQUEST_SCOPE_REQUIRED.text());
